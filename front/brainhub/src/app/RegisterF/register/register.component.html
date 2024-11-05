@@ -1,7 +1,17 @@
 <section class="login-dark">
     <form (ngSubmit)="onSubmit()">
-      <h2 class="sr-only">Login Form</h2>
-      <div class="illustration"><i class="icon ion-ios-locked-outline"></i></div>
+      <h2 class="sr-only">Register Form</h2>
+      <div class="illustration"><i class="icon ion-ios-person-outline"></i></div>
+      <div class="form-group">
+        <input
+          class="form-control"
+          type="text"
+          name="username"
+          placeholder="Username"
+          [(ngModel)]="username"
+          required
+        />
+      </div>
       <div class="form-group">
         <input
           class="form-control"
@@ -23,9 +33,9 @@
         />
       </div>
       <div class="form-group">
-        <button class="btn btn-primary btn-block" type="submit">Log In</button>
+        <button class="btn btn-primary btn-block" type="submit">Register</button>
       </div>
-      <a class="forgot" href="#" routerLink="/register">I dont have an account?</a>
+      <a class="forgot" href="#" routerLink="/login">Already have an account? Log in</a>
     </form>
   </section>
   
