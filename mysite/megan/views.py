@@ -6,35 +6,110 @@ import json
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth import get_user_model
+from .models import Recommendation, UserProgress 
+
 @csrf_exempt
 def login_view(request):
     if request.method == 'POST':
         try:
+            # Parsing JSON data from the frontend
             data = json.loads(request.body)
             email = data.get('email')
             password = data.get('password')
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON format'}, status=400)
 
+        # Check required fields
         if not email or not password:
             return JsonResponse({'error': 'Email and password are required'}, status=400)
 
-        # Find the user by email
-        User = get_user_model()  # Get the User model
+        # Retrieve the user model
+        User = get_user_model()
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             return JsonResponse({'error': 'Invalid email or password'}, status=401)
 
-        # Authenticate user
-        if user.check_password(password):  # Check if the password is correct
+        # Verify the password
+        if user.check_password(password):
             login(request, user)
-            return JsonResponse({'message': 'Login successful', 'user_id': user.id}, status=200)
+
+            # Fetch user-specific recommendations and progress by user ID
+            recommendations = list(Recommendation.objects.filter(utilisateur_id=user.id).values()) or []
+            progress = list(UserProgress.objects.filter(utilisateur_id=user.id).values()) or []
+
+            # Fetch courses assigned to the user with progress details
+            courses = []
+            for progress_item in progress:
+                course = progress_item['cours']  # Assuming 'cours' is a ForeignKey to Course
+                course_details = {
+                    'course_id': course.id,
+                    'course_title': course.titre,
+                    'course_description': course.description,
+                    'progress': progress_item['progression'],
+                    'status': progress_item['statut']
+                }
+                courses.append(course_details)
+
+            # Prepare response data for the Angular frontend
+            response_data = {
+                'message': 'Login successful',
+                'user_id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'recommendations': recommendations,
+                'progress': progress,
+                'courses': courses  # Adding the list of courses to the response data
+            }
+            return JsonResponse(response_data, status=200)
         else:
             return JsonResponse({'error': 'Invalid email or password'}, status=401)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+# @csrf_exempt
+# def login_view(request):
+#     if request.method == 'POST':
+#         try:
+#             # Parsing JSON data from the frontend
+#             data = json.loads(request.body)
+#             email = data.get('email')
+#             password = data.get('password')
+#         except json.JSONDecodeError:
+#             return JsonResponse({'error': 'Invalid JSON format'}, status=400)
 
+#         # Check required fields
+#         if not email or not password:
+#             return JsonResponse({'error': 'Email and password are required'}, status=400)
+
+#         # Retrieve the user model
+#         User = get_user_model()
+#         try:
+#             user = User.objects.get(email=email)
+#         except User.DoesNotExist:
+#             return JsonResponse({'error': 'Invalid email or password'}, status=401)
+
+#         # Verify the password
+#         if user.check_password(password):
+#             login(request, user)
+
+#             # Fetch user-specific recommendations and progress by user ID
+#             recommendations = list(Recommendation.objects.filter(utilisateur_id=user.id).values()) or []
+#             progress = list(UserProgress.objects.filter(utilisateur_id=user.id).values()) or []
+
+#             # Prepare response data for the Angular frontend
+#             response_data = {
+#                 'message': 'Login successful',
+#                 'user_id': user.id,
+#                 'username': user.username,
+#                 'email': user.email,
+#                 'recommendations': recommendations,
+#                 'progress': progress
+#             }
+#             return JsonResponse(response_data, status=200)
+#         else:
+#             return JsonResponse({'error': 'Invalid email or password'}, status=401)
+
+#     return JsonResponse({'error': 'Invalid request method'}, status=405)
 @csrf_exempt
 def register_view(request):
     if request.method == 'POST':

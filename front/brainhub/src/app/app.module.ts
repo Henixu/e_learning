@@ -9,6 +9,7 @@ import { RegisterComponent } from './RegisterF/register/register.component';
 import { HomeComponent } from './HomeF/home/home.component';
 import { NavbarComponent } from './NavbarF/navbar/navbar.component';
 import { FooterComponent } from './FooterF/footer/footer.component';
+import { ProfileComponent } from './ProfileF/profile/profile.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -16,13 +17,15 @@ import { FooterComponent } from './FooterF/footer/footer.component';
     RegisterComponent,
     HomeComponent,
     NavbarComponent,
-    FooterComponent
+    FooterComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    
   ],
   providers: [
     provideClientHydration()
