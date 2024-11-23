@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Use 'mysql' or 'pymysql' if you installed PyMySQL
-        'NAME': 'kms',           # The name of your database
+        'NAME': 'kms_2',           # The name of your database
         'USER': 'root',                 # Your MySQL username
         'PASSWORD': '',             # Your MySQL password
         'HOST': 'localhost',                     # Set to 'localhost' or '127.0.0.1'

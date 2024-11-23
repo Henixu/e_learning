@@ -10,6 +10,7 @@ import { HomeComponent } from './HomeF/home/home.component';
 import { NavbarComponent } from './NavbarF/navbar/navbar.component';
 import { FooterComponent } from './FooterF/footer/footer.component';
 import { ProfileComponent } from './ProfileF/profile/profile.component';
+import { PopupComponent } from './popup/popup.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,7 +19,8 @@ import { ProfileComponent } from './ProfileF/profile/profile.component';
     HomeComponent,
     NavbarComponent,
     FooterComponent,
-    ProfileComponent
+    ProfileComponent,
+    PopupComponent
   ],
   imports: [
     BrowserModule,

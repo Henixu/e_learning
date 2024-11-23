@@ -33,7 +33,10 @@ class Course(models.Model):
     description = models.TextField()
     niveau_difficulte = models.CharField(max_length=50, choices=[('débutant', 'Débutant'), ('intermédiaire', 'Intermédiaire'), ('avancé', 'Avancé')])
     date_creation = models.DateField(auto_now_add=True)
-    categorie = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="courses")
+    image = models.CharField(max_length=255, null=True, blank=True)
+    
+    #categorie = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="courses")
+    
 
     def __str__(self):
         return self.titre

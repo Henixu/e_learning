@@ -6,7 +6,7 @@ import json
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth import get_user_model
-from .models import Recommendation, UserProgress 
+from .models import Recommendation, UserProgress, Course 
 
 @csrf_exempt
 def login_view(request):
@@ -139,3 +139,29 @@ def register_view(request):
             return JsonResponse({'error': 'Failed to create user'}, status=500)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+def list_courses(request):
+    if request.method == 'GET':
+        # Récupérer tous les cours
+        courses = Course.objects.all()
+        
+        # Formater les cours dans une liste de dictionnaires
+        courses_data = [
+            {
+                'id': course.id,
+                'titre': course.titre,
+                'description': course.description,
+                'niveau_difficulte': course.niveau_difficulte,
+                'date_creation': course.date_creation.strftime('%Y-%m-%d'),
+                'image': course.image,
+            }
+            for course in courses
+        ]
+        
+        # Retourner les cours sous forme de réponse JSON
+        return JsonResponse({'courses': courses_data}, status=200, safe=False)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+   
